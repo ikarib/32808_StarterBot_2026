@@ -99,7 +99,8 @@ public class MecanumDrive {
         // maxPower is the largest motor power (absolute value) or 1
         // This ensures all the powers maintain the same ratio,
         // but only if at least one is out of the range [-1, 1]
-        double maxPower = Math.max(Math.abs(forward)+Math.abs(strafe)+Math.abs(turn), 1);
+        double maxSpeed = 0.5; // 1 is full speed
+        double maxPower = Math.max(Math.abs(forward)+Math.abs(strafe)+Math.abs(turn), 1)/maxSpeed;
         // Set power levels for each drive wheel
         leftFrontDrive.setPower((forward + strafe + turn)/maxPower);
         rightFrontDrive.setPower((forward - strafe - turn)/maxPower);
