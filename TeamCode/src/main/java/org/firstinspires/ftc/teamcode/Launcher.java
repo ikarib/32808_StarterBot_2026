@@ -32,7 +32,7 @@ public class Launcher {
     final double TIME_BETWEEN_SHOTS = 2;
 
     /*
-     * Here we create three timers which we use in different parts of our code. Each of these is an
+     * Here we create two timers which we use in different parts of our code. Each of these is an
      * "object," so even though they are all an instance of ElapsedTime(), they count independently
      * from each other.
      */
