@@ -124,12 +124,13 @@ public class MecanumDrive {
         // Square the value of the inputs to allow for finer control
         double strafe = driver.right_stick_x; strafe *= Math.abs(strafe);
         double forward = -driver.right_stick_y; forward *= Math.abs(forward);
+//        double turn = driver.left_stick_x; turn *= Math.abs(turn);
         double turn = Math.hypot(driver.left_stick_x, driver.left_stick_y);
         if (turn > 0) {
-            double desiredHeading = Math.toDegrees(Math.atan2(-driver.left_stick_x, driver.left_stick_y));
+            double desiredHeading = Math.toDegrees(Math.atan2(-driver.left_stick_x, -driver.left_stick_y));
             turn *= this.turn.calculate(wrapAngle(desiredHeading - currentPose.getHeading(AngleUnit.DEGREES)));
-            turn *= Math.abs(turn);
         }
+        setMaxSpeed(0.5);
         driveFieldCentric(strafe, forward, turn);
     }
 
@@ -150,7 +151,7 @@ public class MecanumDrive {
         // Second, rotate angle by the angle the robot is pointing, derived from the gyro
         pinpoint.update();
         currentPose = pinpoint.getPosition();
-        theta -= currentPose.getHeading(AngleUnit.DEGREES);
+        theta -= currentPose.getHeading(AngleUnit.RADIANS);
 //        r /= Math.abs(Math.sin(theta)) + Math.abs(Math.cos(theta));
 
         // Third, convert back to cartesian

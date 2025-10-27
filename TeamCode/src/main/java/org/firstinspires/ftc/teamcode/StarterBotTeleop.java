@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+
 /*
  * This file includes a teleop (driver-controlled) file for the goBILDA® StarterBot for the
  * 2025-2026 FIRST® Tech Challenge season DECODE™. It leverages a mecanum system for robot mobility,
@@ -28,6 +32,7 @@ public class StarterBotTeleop extends LinearOpMode {
 		
         // Wait for the game to start (driver presses START)
         waitForStart();
+        drive.setPosition(new Pose2D(DistanceUnit.METER, 0, 0, AngleUnit.DEGREES, 0));
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -51,8 +56,7 @@ public class StarterBotTeleop extends LinearOpMode {
             // Show the state and motor powers
             telemetry.addData("State", launcher.getLaunchState());
             telemetry.addData("Launcher vel", "%.3f rpm", launcher.getVelocity());
-            telemetry.addData("Current Pose", drive.getCurrentPose());
-
+            telemetry.addData("Current Pose", "%.3f %.3f %.1f", drive.getCurrentPose().getX(DistanceUnit.METER), drive.getCurrentPose().getY(DistanceUnit.METER), drive.getCurrentPose().getHeading(AngleUnit.DEGREES));
             telemetry.update();
         }
 

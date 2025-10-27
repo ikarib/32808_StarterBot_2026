@@ -157,6 +157,9 @@ public class StarterBotAuto extends LinearOpMode {
                     break;
             }
 
+            // update state machine
+            launcher.updateState();
+
             /*
              * Here is our telemetry that keeps us informed of what is going on in the robot. Since this
              * part of the code exists outside of our switch statement, it will run once every loop.
@@ -168,7 +171,7 @@ public class StarterBotAuto extends LinearOpMode {
             telemetry.addData("AutoState", autonomousState);
             telemetry.addData("LauncherState", launcher.getLaunchState());
             telemetry.addData("Launcher vel", "%.3f rpm", launcher.getVelocity());
-            telemetry.addData("Current Pose", drive.getCurrentPose());
+            telemetry.addData("Current Pose", "%.3f %.3f %.1f", drive.getCurrentPose().getX(DistanceUnit.METER), drive.getCurrentPose().getY(DistanceUnit.METER), drive.getCurrentPose().getHeading(AngleUnit.DEGREES));
             telemetry.update();
         }
 
