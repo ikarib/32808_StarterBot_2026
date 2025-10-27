@@ -51,6 +51,7 @@ public class StarterBotTeleop extends LinearOpMode {
             // Show the state and motor powers
             telemetry.addData("State", launcher.getLaunchState());
             telemetry.addData("Launcher vel", "%.3f rpm", launcher.getVelocity());
+            telemetry.addData("Current Pose", drive.getCurrentPose());
 
             telemetry.update();
         }

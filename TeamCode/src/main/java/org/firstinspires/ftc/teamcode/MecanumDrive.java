@@ -80,7 +80,7 @@ public class MecanumDrive {
          *  The Y pod offset refers to how far sideways from the tracking point the Y (forward) odometry pod is.
          *  Right of the center is a positive number, left of center is a negative number.
          */
-        pinpoint.setOffsets(120, 100, DistanceUnit.MM);
+        pinpoint.setOffsets(72, 156, DistanceUnit.MM);
 
         /*
          * Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either
@@ -96,7 +96,7 @@ public class MecanumDrive {
          * increase when you move the robot to the right. And the Y (forward) pod should increase when
          * you move the robot forward.
          */
-        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED,
+        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,
                 GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
         /*
