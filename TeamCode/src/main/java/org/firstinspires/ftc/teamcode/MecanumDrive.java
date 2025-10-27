@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
-import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 public class MecanumDrive {
     private GoBildaPinpointDriver pinpoint;
     private Pose2D currentPose;
-    private PIDController strafe, forward, turn;
+    private PIDFController strafe, forward, turn;
     private double maxSpeed = 1; // 1 is full speed
 
     /*
@@ -110,9 +110,9 @@ public class MecanumDrive {
         pinpoint.resetPosAndIMU();
 
         // Set up PID controllers used in driving the robot.
-        strafe = new PIDController(4.0,0.05,0.2); strafe.setTolerance(0.01); // in meters
-        forward = new PIDController(4.0,0.05,0.2); forward.setTolerance(0.01); // in meters
-        turn = new PIDController(0.015,0,0.0003); turn.setTolerance(1); // in degrees
+        strafe = new PIDFController(4.0,0.05,0.2,0); strafe.setTolerance(0.01); // in meters
+        forward = new PIDFController(4.0,0.05,0.2,0); forward.setTolerance(0.01); // in meters
+        turn = new PIDFController(0.015,0,0.0003,0); turn.setTolerance(1); // in degrees
     }
 
     public void setPosition(Pose2D pose) {
