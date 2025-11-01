@@ -24,8 +24,8 @@ public class StarterBotTeleop extends LinearOpMode {
     @Override
     public void runOpMode() {
         // This code runs ONCE when the driver hits INIT.
-        drive.init(hardwareMap);
-        launcher.init(hardwareMap);
+        drive.init();
+        launcher.init();
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");

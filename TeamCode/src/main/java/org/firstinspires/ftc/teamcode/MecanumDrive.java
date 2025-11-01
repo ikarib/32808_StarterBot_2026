@@ -10,15 +10,19 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion;
+import org.firstinspires.ftc.robotcore.external.ExportClassToBlocks;
+import org.firstinspires.ftc.robotcore.external.ExportToBlocks;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
-public class MecanumDrive {
-    private GoBildaPinpointDriver pinpoint;
-    private Pose2D currentPose;
-    private PIDFController strafe, forward, turn;
-    private double maxSpeed = 1; // 1 is full speed
+@ExportClassToBlocks
+public class MecanumDrive extends BlocksOpModeCompanion {
+    private static GoBildaPinpointDriver pinpoint;
+    private static Pose2D currentPose;
+    private static PIDFController strafe, forward, turn;
+    private static double maxSpeed = 1; // 1 is full speed
 
     /*
      * Here we create three timers which we use in different parts of our code. Each of these is an
@@ -28,10 +32,11 @@ public class MecanumDrive {
     private final ElapsedTime driveTimer = new ElapsedTime();
 
     // Declare OpMode members.
-    private DcMotor leftFrontDrive, rightFrontDrive, leftBackDrive;
-    private DcMotorSimple rightBackDrive;
+    private static DcMotor leftFrontDrive, rightFrontDrive, leftBackDrive;
+    private static DcMotorSimple rightBackDrive;
 
-    public void init(HardwareMap hardwareMap) {
+    @ExportToBlocks
+    public static void init() {
 
         /*
          * Initialize the hardware variables. Note that the strings used here as parameters
@@ -115,7 +120,8 @@ public class MecanumDrive {
         turn = new PIDFController(0.015,0,0.0003,0); turn.setTolerance(1); // in degrees
     }
 
-    public void setPosition(Pose2D pose) {
+    @ExportToBlocks
+    public static void setPosition(Pose2D pose) {
         pinpoint.setPosition(pose);
         currentPose = pose;
     }
@@ -125,13 +131,13 @@ public class MecanumDrive {
         double strafe = driver.right_stick_x; strafe *= Math.abs(strafe);
         double forward = -driver.right_stick_y; forward *= Math.abs(forward);
 //        double turn = driver.left_stick_x; turn *= Math.abs(turn);
-        double turn = Math.hypot(driver.left_stick_x, driver.left_stick_y);
-        if (turn > 0) {
+        double rotate = Math.hypot(driver.left_stick_x, driver.left_stick_y);
+        if (rotate > 0) {
             double desiredHeading = Math.toDegrees(Math.atan2(-driver.left_stick_x, -driver.left_stick_y));
-            turn *= this.turn.calculate(wrapAngle(desiredHeading - currentPose.getHeading(AngleUnit.DEGREES)));
+            rotate *= turn.calculate(wrapAngle(desiredHeading - currentPose.getHeading(AngleUnit.DEGREES)));
         }
         setMaxSpeed(0.5);
-        driveFieldCentric(strafe, forward, turn);
+        driveFieldCentric(strafe, forward, rotate);
     }
 
     /**
@@ -143,7 +149,14 @@ public class MecanumDrive {
      * @param forward the vertical speed of the robot, derived from input
      * @param turn    the turn speed of the robot, derived from input
      */
-    void driveFieldCentric(double strafe, double forward, double turn) {
+    @ExportToBlocks(
+            //heading = "",
+            //color = 155,
+            //comment = "Initialize the hardware variables",
+            //tooltip = "Initialize the hardware variables"
+            parameterLabels = {"strafe","forward","turn"}
+    )
+    public static void driveFieldCentric(double strafe, double forward, double turn) {
         // First, convert direction being asked to drive to polar coordinates
         double theta = Math.atan2(forward, strafe);
         double r = Math.hypot(strafe, forward);
@@ -162,11 +175,11 @@ public class MecanumDrive {
         driveRobotCentric(strafe, forward, turn);
     }
 
-    public void setMaxSpeed(double speed) {
+    public static void setMaxSpeed(double speed) {
         maxSpeed = speed;
     }
 
-    void driveRobotCentric(double strafe, double forward, double turn){
+    public static void driveRobotCentric(double strafe, double forward, double turn){
         // maxPower is the largest motor power (absolute value) or 1
         // This ensures all the powers maintain the same ratio,
         // but only if at least one is out of the range [-1, 1]
@@ -213,11 +226,12 @@ public class MecanumDrive {
         return angle;
     }
 
-    void stop() {
+    public static void stop() {
         driveRobotCentric(0,0,0);
     }
 
-    Pose2D getCurrentPose() {
+    @ExportToBlocks
+    public static Pose2D getCurrentPose() {
         return currentPose;
     }
 }

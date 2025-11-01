@@ -8,7 +8,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class Launcher {
+import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion;
+import org.firstinspires.ftc.robotcore.external.ExportClassToBlocks;
+import org.firstinspires.ftc.robotcore.external.ExportToBlocks;
+
+@ExportClassToBlocks
+public class Launcher extends BlocksOpModeCompanion {
     public static double FEED_TIME = 0.20; //The feeder servos run this long in seconds when a shot is requested.
     public static double FULL_SPEED = 1.0;
 
@@ -21,23 +26,23 @@ public class Launcher {
     public static double LAUNCHER_TARGET_VELOCITY = 1125;
     public static double LAUNCHER_MIN_VELOCITY = 1075;
 
-    private DcMotorEx launcher;
-    private CRServo leftFeeder, rightFeeder;
+    private static DcMotorEx launcher;
+    private static CRServo leftFeeder, rightFeeder;
 
     /*
      * The number of seconds that we wait between each of our 3 shots from the launcher. This
      * can be much shorter, but the longer break is reasonable since it maximizes the likelihood
      * that each shot will score.
      */
-    final double TIME_BETWEEN_SHOTS = 2;
+    private final static double TIME_BETWEEN_SHOTS = 2;
 
     /*
      * Here we create two timers which we use in different parts of our code. Each of these is an
      * "object," so even though they are all an instance of ElapsedTime(), they count independently
      * from each other.
      */
-    private final ElapsedTime shotTimer = new ElapsedTime();
-    private final ElapsedTime feederTimer = new ElapsedTime();
+    private static final ElapsedTime shotTimer = new ElapsedTime();
+    private static final ElapsedTime feederTimer = new ElapsedTime();
 
 
     /*
@@ -67,13 +72,14 @@ public class Launcher {
      * which can store the current condition of the shooter. In other applications, you may have
      * multiple copies of the same enum which have different names. Here we just have one.
      */
-    private LaunchState launchState;
+    private static LaunchState launchState;
 
 
     /*
      * This code runs ONCE when the driver hits INIT.
      */
-    public void init(HardwareMap hardwareMap) {
+    @ExportToBlocks
+    public static void init() {
         /*
          * Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
@@ -131,7 +137,8 @@ public class Launcher {
     }
 
     // the user would like to fire a new shot
-    void shoot() {
+    @ExportToBlocks
+    public static void shoot() {
         if (launchState == LaunchState.IDLE) {
             launchState = LaunchState.PREPARE;
             shotTimer.reset();
@@ -142,7 +149,8 @@ public class Launcher {
      * Launches one ball, when a shot is requested spins up the motor and once it is above a minimum
      * velocity, runs the feeder servos for the right amount of time to feed the next ball.
      */
-    public void updateState() {
+    @ExportToBlocks
+    public static void updateState() {
         switch (launchState) {
             case IDLE:
                 break;
@@ -168,15 +176,18 @@ public class Launcher {
         }
     }
 
-    public void stop() {
+    public static void stop() {
         stopFlywheel();
         stopFeeder();
     }
-    public void startFlywheel() {
+
+    @ExportToBlocks
+    public static void startFlywheel() {
         launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
     }
 
-    public void stopFlywheel() {
+    @ExportToBlocks
+    public static void stopFlywheel() {
         launcher.setVelocity(0);
         launchState = LaunchState.IDLE;
     }
@@ -184,20 +195,23 @@ public class Launcher {
     public boolean isIdle() {
         return launchState == LaunchState.IDLE;
     }
-    private void startFeeder() {
+
+    private static void startFeeder() {
         leftFeeder.setPower(FULL_SPEED);
         rightFeeder.setPower(FULL_SPEED);
     }
-    private void stopFeeder() {
+    private static void stopFeeder() {
         leftFeeder.setPower(0);
         rightFeeder.setPower(0);
     }
 
-    public String getLaunchState() {
+    @ExportToBlocks
+    public static String getLaunchState() {
         return launchState.toString();
     }
 
-    public double getVelocity() {
+    @ExportToBlocks
+    public static double getVelocity() {
         return launcher.getVelocity()/28*60; // RPM
     }
 }
